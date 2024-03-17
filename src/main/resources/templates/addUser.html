@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление пользователя</title>
+</head>
+<body>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Выйти">
+</form>
+<h1 th:text="${headerMessage}"></h1>
+
+<form method="POST" action="addUser" th:object="${user}" accept-charset="UTF-8">
+    <table border="2">
+        <tr>
+            <td><label for="username">Username</label></td>
+            <td><input type="text" id="username" name="username" th:field="*{username}"/></td>
+        </tr>
+        <tr>
+            <td><label for="firstName">Имя</label></td>
+            <td><input type="text" id="firstName" name="firstName" th:field="*{firstName}"/></td>
+        </tr>
+        <tr>
+            <td><label for="lastName">Фамилия</label></td>
+            <td><input type="text" id="lastName" name="lastName" th:field="*{lastName}"/></td>
+        </tr>
+        <tr>
+            <td><label for="email">Email</label></td>
+            <td><input type="text" id="email" name="email" th:field="*{email}"/></td>
+        </tr>
+        <tr>
+            <td><label for="password">Password</label></td>
+            <td><input type="text" id="password" name="password" th:field="*{password}"/></td>
+        </tr>
+        <tr>
+            <td>
+                <label>Roles:</label>
+            </td>
+            <td>
+
+                <select name="nameRoles" multiple size="2">
+                    <option th:each="role : ${roles}"
+                            th:value="${role.name}"
+                            th:text="${role.getName()}">
+                    </option>
+                </select>
+
+            </td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Добавить"/></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
