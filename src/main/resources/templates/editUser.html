@@ -10,7 +10,7 @@
 </form>
 <h1 th:text="${headerMessage}"></h1>
 
-<form th:method="POST" th:action="@{/admin/editUser}" th:object="${user}">
+<form th:method="PATCH" th:action="@{/admin/editUser}" th:object="${user}">
     <input type="hidden" th:field="*{id}"/>
     <table border="2">
         <tr>
