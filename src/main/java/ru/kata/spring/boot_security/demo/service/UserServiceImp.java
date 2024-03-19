@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@Transactional
+
 public class UserServiceImp implements UserService {
     private final UserRepository repository;
     private final RoleService roleService;
@@ -42,7 +42,7 @@ public class UserServiceImp implements UserService {
         return repository.findById(id).orElse(null);
     }
 
-
+    @Transactional
     public void saveUser(User user) {
 
 
@@ -50,7 +50,7 @@ public class UserServiceImp implements UserService {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         repository.save(user);
     }
-
+    @Transactional
     public User getUserAndRoles(User user, String[] roles) {
         if (roles == null) {
             user.setRoles(roleService.getRoleByName(new String[]{"ROLE_USER"}));
@@ -59,11 +59,12 @@ public class UserServiceImp implements UserService {
         }
         return user;
     }
-
+    @Transactional
     public void deleteUser(Long id) {
         repository.deleteById(id);
     }
 
+    @Transactional
     public User getNotNullRole(User user) {
         if (user.getRoles() == null) {
             user.setRoles(Collections.singleton(new Role(2L)));

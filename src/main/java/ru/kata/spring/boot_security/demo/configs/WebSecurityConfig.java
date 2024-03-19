@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.kata.spring.boot_security.demo.security.UserDetailServiceImp;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -19,9 +20,9 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 @ComponentScan("ru.kata.spring.boot_security.demo")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailServiceImp userService;
+    private UserDetailsService userService;
     @Autowired
-    public void setUserService(UserDetailServiceImp userService) {
+    public void setUserService(UserDetailsService userService) {
         this.userService = userService;
     }
 
