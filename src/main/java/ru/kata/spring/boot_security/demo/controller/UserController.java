@@ -1,23 +1,33 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import ru.kata.spring.boot_security.demo.model.User;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.UserService;
+
+import java.security.Principal;
 
 @Controller
-//@RequestMapping(name = "/user")
 public class UserController {
+    private final UserService userService;
 
-    public UserController() {
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping(value = {"/user"})
-    public String user(@CurrentSecurityContext(expression = "authentication.principal") User principal, Model model) {
-        model.addAttribute("user", principal);
+    @GetMapping("/user")
+    public String showUser(Model model, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("user", user);
+        return "userForAdmin";
+    }
+
+    @GetMapping("/userpage")
+    public String showForUser(Model model, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("user", user);
         return "user";
     }
+
 }

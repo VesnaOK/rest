@@ -17,59 +17,63 @@ import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 
 public class UserServiceImp implements UserService {
-    private final UserRepository repository;
-    private final RoleService roleService;
+    private  UserRepository userRepository;
+    private  RoleRepository roleRepository;
     private final PasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
 
-    public UserServiceImp(UserRepository repository, RoleService roleService) {
-        this.repository = repository;
-        this.roleService = roleService;
-
+    @Autowired
+    public void setUserAndRoleRepository(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
 
-    public List<User> getAllUsers() {
-        return repository.findAll();
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
-
-    public User getUserById(Long id) {
-        return repository.findById(id).orElse(null);
+    @Override
+    @Transactional
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
+    @Override
+    @Transactional
+    public User showUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.orElse(new User());
+    }
+
+    @Override
     @Transactional
     public void saveUser(User user) {
-
-
-        //user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        repository.save(user);
-    }
-    @Transactional
-    public User getUserAndRoles(User user, String[] roles) {
-        if (roles == null) {
-            user.setRoles(roleService.getRoleByName(new String[]{"ROLE_USER"}));
-        } else {
-            user.setRoles(roleService.getRoleByName(roles));
-        }
-        return user;
-    }
-    @Transactional
-    public void deleteUser(Long id) {
-        repository.deleteById(id);
+        userRepository.save(user);
     }
 
+    @Override
     @Transactional
-    public User getNotNullRole(User user) {
-        if (user.getRoles() == null) {
-            user.setRoles(Collections.singleton(new Role(2L)));
-        }
-        return user;
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
     }
 
+    @Override
+    @Transactional
+    public void updateUserById(Long id, User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<Role> findRoles() {
+        return roleRepository.findAll();
+    }
 }
